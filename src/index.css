@@ -1,0 +1,86 @@
+:root {
+  --gp-bg: #f4f6f8;
+  --gp-surface: #ffffff;
+  --gp-border: #e2e6ea;
+  --gp-text: #1f2933;
+  --gp-muted: #6b7785;
+  --gp-accent: #03a9f4;
+  --gp-danger: #d32f2f;
+  --gp-warning-bg: #fff8e1;
+  --gp-warning-border: #ffe082;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--gp-bg);
+  color: var(--gp-text);
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-booting {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 20px;
+  background: var(--gp-surface);
+  border-bottom: 1px solid var(--gp-border);
+}
+
+.app-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.app-brand-name {
+  font-weight: 600;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-brand-sub {
+  font-size: 12px;
+  color: var(--gp-muted);
+}
+
+.app-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.app-username {
+  font-size: 13px;
+  color: var(--gp-muted);
+}
+
+.app-main {
+  flex: 1;
+  min-height: 0;
+  padding: 16px 20px;
+}
