@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from "./contexts/auth";
 import AppShell from "./layouts/AppShell";
 import LoginPage from "./pages/login/LoginPage";
 import CatalogPage from "./pages/catalog/CatalogPage";
+import ItemsPage from "./pages/items/ItemsPage";
 import { licenseKey } from "./devextreme-license";
 
 if (licenseKey) config({ licenseKey });
@@ -38,9 +39,12 @@ function Shell() {
   return (
     <Routes>
       <Route element={<AppShell />}>
+        {/* Items first because it is where the work starts: there is nothing to make visible to a
+            company until something has been published. */}
+        <Route path="/items" element={<ItemsPage />} />
         <Route path="/catalog" element={<CatalogPage />} />
       </Route>
-      <Route path="*" element={<Navigate to="/catalog" replace />} />
+      <Route path="*" element={<Navigate to="/items" replace />} />
     </Routes>
   );
 }

@@ -46,8 +46,14 @@ it belongs in the repo or in an env var.
 | `src/api/auth.js`, `catalog.js` | one function per endpoint, no UI concerns |
 | `src/contexts/auth.js` | session state; restores from `/api/auth/me` on load |
 | `src/pages/login/` | login screen |
-| `src/pages/catalog/` | company picker + catalog grid with the visibility switch |
-| `src/layouts/AppShell.js` | header, distributor name, sign out |
+| `src/pages/items/` | **Items** — the catalog itself: add, edit, withdraw |
+| `src/pages/catalog/` | **Visibility** — company picker + catalog grid with the visibility switch |
+| `src/layouts/AppShell.js` | header, nav between the two screens, distributor name, sign out |
+
+Items and Visibility are two screens on purpose. Items is *what I publish* and is the same for
+every viewer; Visibility is *what one company may use* and is meaningless until a company is
+picked. One screen doing both would need an optional company picker, and half its columns would
+blank out depending on the answer.
 
 Routes are chosen from auth state in `App.js` rather than guarded per route: an unauthenticated
 visitor gets exactly one route, so a new page cannot be added and left reachable by accident. It
@@ -75,6 +81,17 @@ The switch's `onValueChanged` also guards with `if (!e.event) return;` — DevEx
 programmatic changes too, so without the guard patching state calls the API again and toggles the
 value straight back.
 
+## The item form's one rule
+
+**PUT is a full replace, not a patch.** The API writes every field it is given, so the form always
+sends the whole item — which is also why the form is hand-rolled rather than DataGrid's built-in
+popup editing: the grid hands an update only the fields that CHANGED, and sending that would clear
+the description nobody touched.
+
+Patch the grid from the **response**, not the form values. The code comes back trimmed and
+upper-cased and blank optional fields come back `null`, so the two are not the same thing.
+
 ## Not built yet
 
-Analytics/dashboard, catalog CRUD (items are seeded by SQL for now), and company consent management.
+Analytics/dashboard, company consent management, and propagation — editing an item changes the
+catalog, and nothing yet pushes that change into the `T_Stock` rows companies have already adopted.
