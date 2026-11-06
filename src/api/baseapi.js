@@ -13,7 +13,8 @@ export const apiurl = process.env.REACT_APP_API_URL || "http://localhost:5104";
  * URLs and headers, and every retry path had to know about all three.
  *
  * No refresh flow, because the API has no refresh endpoint - tokens are valid until they expire
- * (8 hours by default) and a 401 means log in again. If refresh is added, it belongs here.
+ * (8 hours by default), or until the account signs in elsewhere; either way the response
+ * interceptor below signs this tab out. If refresh is added, it belongs here.
  */
 const client = axios.create({ baseURL: apiurl });
 
@@ -30,6 +31,33 @@ client.interceptors.request.use((config) => {
   const token = getToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
+});
+
+/**
+ * ONE SESSION PER ACCOUNT. When this account signs in on another device, the API refuses this
+ * browser's token: 409 { code: "duplicate_login" } (the accounting app's status), or 401 once the
+ * session has ended (signed out, account disabled, token expired). Every call can hit that, so it is
+ * caught here once and handed to the auth context, which tells the user and signs this tab out.
+ *
+ * The login call itself is excluded: its 409 is the "already signed in elsewhere - continue?"
+ * question, which the login page answers.
+ */
+let onSessionLost = null;
+
+export function setSessionLostHandler(handler) {
+  onSessionLost = handler;
+}
+
+client.interceptors.response.use(undefined, (error) => {
+  const status = error?.response?.status;
+  const code = error?.response?.data?.code;
+  const isLogin = String(error?.config?.url || "").includes("/api/auth/login");
+
+  if (!isLogin && getToken() && onSessionLost) {
+    if (status === 409 && code === "duplicate_login") onSessionLost("duplicate");
+    else if (status === 401) onSessionLost("ended");
+  }
+  return Promise.reject(error);
 });
 
 /**

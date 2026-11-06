@@ -1,0 +1,67 @@
+/* Users: laid out like Items (items.css - card, toolbar, grid, footer); only its own pieces here. */
+
+.users-page .items-toolbar {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.users-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.users-you {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #eef1f4;
+  color: var(--gp-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Row actions beside Items' green pencil: blue to email a link, grey to unlock. */
+.users-action-mail {
+  color: #2f6fe4;
+}
+
+.users-action-mail:hover {
+  background: #eaf1fe;
+}
+
+.users-action-unlock {
+  color: #5f6368;
+}
+
+.users-action-unlock:hover {
+  background: #f1f2f4;
+}
+
+.users-password-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.users-password-row > .dx-textbox {
+  flex: 1;
+  min-width: 0;
+}
+
+.users-copy {
+  width: 48px;
+  height: 48px;
+}
+
+/* The set-password link, when it has to be passed on by hand - fixed-width so it reads as one token. */
+.users-password-row input {
+  font-family: Consolas, "Courier New", monospace;
+  letter-spacing: 0.04em;
+}
+
+.users-reset-intro {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gp-text);
+}

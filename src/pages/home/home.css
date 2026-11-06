@@ -1,0 +1,980 @@
+/* Sales-figure pages (the dashboard and the company / item drill-downs). Light-only, like the app.
+   Every card keeps one tone (index.css --tone-*): its icon tile, and its bars where it has any. The
+   chart's bars are a deeper green than the brand #46cf64, so they still clear 3:1 on the green wash. */
+.home {
+  --viz-surface: #ffffff;
+  --viz-up: #2fb551;
+  --viz-up-on: #1f8f3c;
+  --viz-up-zone: #eff9f2;
+  --viz-down-bar: #e5604f;
+  --viz-down-on: #c9412f;
+  --viz-down-zone: #fdf2f1;
+  --viz-text: #26292c;
+  --viz-text-2: #5f6368;
+  --viz-muted: #8a8f96;
+  --viz-grid: #e3e7e4;
+  --viz-axis: #c9cdd2;
+  --viz-delta-up: #1e8a3a;
+  --viz-delta-down: #c0392b;
+  --viz-border: #e6e8eb;
+  --viz-track: #eef0f2;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: var(--viz-text);
+}
+
+/* ------------------------------------------------------------------ filter row */
+.home-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.home-range {
+  display: inline-flex;
+  border: 1px solid var(--viz-border);
+  border-radius: 999px;
+  background: var(--viz-surface);
+  padding: 4px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.home-range-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--viz-text-2);
+  font: inherit;
+  font-size: 13.5px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.home-range-btn:hover {
+  background: #f2f4f5;
+}
+
+.home-range-btn-on,
+.home-range-btn-on:hover {
+  color: #fff;
+  font-weight: 600;
+  background: var(--gp-green);
+}
+
+.home-range-check {
+  flex: none;
+}
+
+/* "2 of 2 companies share sales with you" - a pill with a live dot. */
+.home-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--viz-border);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--viz-text-2);
+  background: var(--viz-surface);
+}
+
+.home-meta-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--gp-green);
+}
+
+.home-error,
+.home-empty {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.home-error {
+  background: #fdecea;
+  color: #8a1c1c;
+}
+
+.home-empty {
+  background: var(--viz-surface);
+  border: 1px solid var(--viz-border);
+  color: var(--viz-text-2);
+}
+
+.home-booting {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.home-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: opacity 0.15s;
+}
+
+.home-body-stale {
+  opacity: 0.55;
+}
+
+/* ------------------------------------------------------------------ KPI row */
+/* As many tiles per row as fit at a readable width - four on a desktop, two beside an open menu
+   on a laptop, one on a phone - instead of squeezing four until the figures truncate. */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+/* A tile washed in its tone, a 3px band of the tone along the top, the figure in the tone's ink. */
+.kpi {
+  --kpi-tone: var(--tone-green);
+  --kpi-wash: #effaf2;
+  --kpi-edge: #c8eed2;
+  --kpi-ink: #145c2b;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: var(--kpi-wash);
+  border: 1px solid var(--kpi-edge);
+  border-top: 3px solid var(--kpi-tone);
+  border-radius: 14px;
+  padding: 18px 20px 20px;
+  min-width: 0;
+}
+
+.kpi-green {
+  --kpi-tone: #46cf64;
+  --kpi-wash: #effaf2;
+  --kpi-edge: #c8eed2;
+  --kpi-ink: #145c2b;
+}
+
+.kpi-orange {
+  --kpi-tone: #f07a1a;
+  --kpi-wash: #fff5ec;
+  --kpi-edge: #fadcc2;
+  --kpi-ink: #7a3609;
+}
+
+.kpi-blue {
+  --kpi-tone: #1f78d1;
+  --kpi-wash: #eef5fd;
+  --kpi-edge: #cfe1f6;
+  --kpi-ink: #173d6b;
+}
+
+.kpi-purple {
+  --kpi-tone: #8b4fe0;
+  --kpi-wash: #f5f0fe;
+  --kpi-edge: #e1d4fa;
+  --kpi-ink: #3b1c7c;
+}
+
+.kpi-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kpi-icon {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--kpi-tone);
+  box-shadow: 0 0 0 1px rgba(16, 24, 40, 0.05);
+}
+
+.kpi-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--viz-text);
+}
+
+.kpi-value {
+  max-width: 100%;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--kpi-ink);
+  margin-top: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The change against the previous period, on a white pill. */
+.kpi-delta {
+  margin-top: 14px;
+  font-size: 12.5px;
+}
+
+.kpi-delta > span {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(16, 24, 40, 0.04);
+}
+
+.kpi-delta-up {
+  color: var(--viz-delta-up);
+}
+
+.kpi-delta-down {
+  color: var(--viz-delta-down);
+}
+
+.kpi-delta-flat {
+  color: var(--viz-text);
+}
+
+/* ------------------------------------------------------------------ cards */
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* Net sales beside low stock: the chart gets the wider share. */
+.card-row-trend {
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+}
+
+.card {
+  background: var(--viz-surface);
+  border: 1px solid var(--viz-border);
+  border-radius: 14px;
+  padding: 22px 24px 24px;
+  min-width: 0;
+}
+
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.card-head-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* The card's icon on its tinted tile (tones in index.css, .app-tone-*). */
+.card-icon {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--tile-wash);
+  color: var(--tile-ink);
+}
+
+.card-head-text {
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.card-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.25;
+  color: var(--viz-text);
+}
+
+.card-sub {
+  font-size: 13px;
+  color: var(--viz-muted);
+  margin-top: 3px;
+}
+
+.card-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  border: 1px solid var(--viz-border);
+  background: var(--viz-surface);
+  color: var(--viz-text-2);
+  font: inherit;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.card-toggle:hover {
+  border-color: var(--gp-green);
+  color: var(--gp-green-text);
+}
+
+/* The "View all stock" link borrows the toggle button look. */
+a.card-toggle {
+  color: var(--viz-text);
+  text-decoration: none;
+}
+
+/* ------------------------------------------------------------------ trend chart */
+.trend {
+  width: 100%;
+}
+
+.trend-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin: -4px 0 12px;
+  font-size: 13px;
+  color: var(--viz-text);
+}
+
+.trend-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.trend-swatch {
+  width: 11px;
+  height: 11px;
+  flex: none;
+  border-radius: 3px;
+}
+
+.trend-swatch-up {
+  background: var(--viz-up);
+}
+
+.trend-swatch-down {
+  background: var(--viz-down-bar);
+}
+
+.trend-swatch-none {
+  background: transparent;
+}
+
+.trend-plot {
+  position: relative;
+  width: 100%;
+}
+
+.trend-plot svg {
+  display: block;
+  outline: none;
+  touch-action: pan-y;
+}
+
+.trend-plot svg:focus-visible {
+  box-shadow: 0 0 0 2px rgba(42, 120, 214, 0.35);
+  border-radius: 6px;
+}
+
+.trend-zone-up {
+  fill: var(--viz-up-zone);
+}
+
+.trend-zone-down {
+  fill: var(--viz-down-zone);
+}
+
+.trend-grid {
+  stroke: var(--viz-grid);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.trend-axis,
+.trend-baseline {
+  stroke: var(--viz-axis);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.trend-tick {
+  fill: var(--viz-text-2);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.trend-hover {
+  fill: rgba(16, 24, 40, 0.05);
+}
+
+.trend-bar-up {
+  fill: var(--viz-up);
+}
+
+.trend-bar-down {
+  fill: var(--viz-down-bar);
+}
+
+.trend-bar-up.trend-bar-on {
+  fill: var(--viz-up-on);
+}
+
+.trend-bar-down.trend-bar-on {
+  fill: var(--viz-down-on);
+}
+
+.trend-tip {
+  position: absolute;
+  top: 8px;
+  pointer-events: none;
+  background: var(--viz-surface);
+  border: 1px solid var(--viz-border);
+  box-shadow: 0 4px 14px rgba(11, 11, 11, 0.08);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.trend-tip-date {
+  color: var(--viz-muted);
+  margin-bottom: 4px;
+}
+
+.trend-tip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trend-tip-row strong {
+  font-weight: 600;
+  color: var(--viz-text);
+}
+
+.trend-tip-label {
+  color: var(--viz-text-2);
+}
+
+.trend-table-wrap {
+  max-height: 360px;
+  overflow: auto;
+}
+
+.trend-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.trend-table th,
+.trend-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--viz-track);
+  text-align: left;
+}
+
+.trend-table th {
+  color: #000;
+  font-weight: 400;
+  position: sticky;
+  top: 0;
+  background: var(--gp-grid-head);
+}
+
+.trend-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ ranked bars */
+.rank {
+  --rank-tone: var(--tone-green);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rank-tone-pink {
+  --rank-tone: #ee6aa7;
+}
+
+.rank-tone-blue {
+  --rank-tone: #1565e8;
+}
+
+.rank-tone-purple {
+  --rank-tone: var(--tone-purple);
+}
+
+/* columns: name | bar | value */
+.rank-columns .rank-row {
+  display: grid;
+  grid-template-columns: minmax(0, 210px) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+}
+
+/* stacked: name and value, the detail, then the bar full width */
+.rank-stacked .rank-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rank-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.rank-label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.rank-name {
+  font-size: 14.5px;
+  color: var(--viz-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.rank-sub {
+  font-size: 12px;
+  color: var(--viz-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rank-columns .rank-sub {
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.rank-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--viz-track);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.rank-stacked .rank-track {
+  height: 8px;
+  margin-top: 4px;
+}
+
+.rank-bar {
+  height: 100%;
+  min-width: 4px;
+  border-radius: 999px;
+  background: var(--rank-tone);
+}
+
+.rank-value {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--viz-text);
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.rank-columns .rank-value {
+  min-width: 96px;
+}
+
+.rank-empty {
+  font-size: 13px;
+  color: var(--viz-muted);
+  padding: 8px 0;
+}
+
+/* ------------------------------------------------------------------ low stock */
+/* Stretches to the chart beside it; "View all stock" sits at the foot. */
+.lowstock-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.lowstock-foot {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.lowstock-empty {
+  font-size: 13px;
+  color: var(--viz-text-2);
+  line-height: 1.5;
+}
+
+.lowstock-ok {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #cdeed6;
+  border-radius: 10px;
+  background: #effaf2;
+  color: #17703a;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.lowstock-ok svg {
+  flex: none;
+}
+
+.lowstock-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.lowstock-at {
+  font-size: 12.5px;
+  color: var(--viz-muted);
+}
+
+.lowstock-pill {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.lowstock-pill-out {
+  background: #fdecec;
+  color: #c0392b;
+}
+
+.lowstock-pill-low {
+  background: #fff4dc;
+  color: #9a6400;
+}
+
+.lowstock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+/* The accounting listing header: grey band, plain weight. */
+.lowstock-table th {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 400;
+  color: #000;
+  background: var(--gp-grid-head);
+  padding: 8px;
+  border-bottom: 1px solid var(--gp-grid-border);
+}
+
+.lowstock-table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid rgba(11, 11, 11, 0.06);
+  vertical-align: middle;
+}
+
+.lowstock-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.lowstock-code {
+  font-weight: 600;
+}
+
+.lowstock-name,
+.lowstock-uom {
+  color: var(--viz-text-2);
+}
+
+.lowstock-neg {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.lowstock-more {
+  margin-top: 10px;
+  font-size: 12.5px;
+}
+
+/* ------------------------------------------------------------------ sales by area map */
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(240px, 1fr);
+  gap: 16px 32px;
+  align-items: start;
+}
+
+.map-figure {
+  position: relative;
+  min-width: 0;
+}
+
+.map-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* A 1px surface ring between neighbouring states, so adjacent fills never merge. */
+.map-state,
+.map-marker {
+  stroke: var(--viz-surface);
+  stroke-width: 1;
+  cursor: pointer;
+  transition: fill 120ms ease;
+}
+
+.map-marker {
+  stroke-width: 2;
+}
+
+.map-state:focus {
+  outline: none;
+}
+
+.map-state-on,
+.map-state:focus-visible {
+  stroke: var(--viz-text);
+  stroke-width: 2;
+}
+
+.map-tip {
+  position: absolute;
+  z-index: 2;
+  min-width: 170px;
+  padding: 8px 10px;
+  border: 1px solid var(--viz-border);
+  border-radius: 8px;
+  background: var(--viz-surface);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.map-tip-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.map-tip-row {
+  color: var(--viz-text-2);
+  line-height: 1.6;
+}
+
+.map-tip-row strong {
+  color: var(--viz-text);
+}
+
+.map-tip-muted {
+  color: var(--viz-muted);
+}
+
+.map-tip-up {
+  color: var(--viz-delta-up);
+}
+
+.map-tip-down {
+  color: var(--viz-delta-down);
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--viz-text-2);
+}
+
+.map-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.map-swatch {
+  display: inline-block;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.map-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-list-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 10px 12px;
+  border-radius: 10px;
+}
+
+.map-list-row-on {
+  background: #f7f3fe;
+}
+
+.map-list-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.map-list-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tone-purple);
+}
+
+.map-list-name {
+  font-size: 14.5px;
+  color: var(--viz-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-list-value {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.map-list-sub {
+  font-size: 12px;
+  color: var(--viz-muted);
+}
+
+.map-list-line + .map-list-sub {
+  padding-left: 18px;
+}
+
+.map-share-track {
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: var(--viz-track);
+  overflow: hidden;
+}
+
+.map-share-bar {
+  height: 100%;
+  min-width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8b4fe0, #5b4fe0);
+}
+
+.map-list-empty {
+  font-size: 13px;
+  color: var(--viz-muted);
+}
+
+.map-note {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: var(--viz-muted);
+}
+
+/* Leader line and label for the federal-territory markers. */
+.map-leader {
+  stroke: var(--viz-muted);
+  stroke-width: 1;
+}
+
+.map-marker-label {
+  font-size: 17px;
+  fill: var(--viz-text-2);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ narrow screens */
+@media (max-width: 1200px) {
+  .card-row-trend {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .card-row,
+  .map-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card {
+    padding: 18px 16px 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-range-btn {
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+
+  .rank-columns .rank-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 12px;
+  }
+
+  .rank-columns .rank-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .kpi-value {
+    font-size: 26px;
+  }
+}

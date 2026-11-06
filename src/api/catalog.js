@@ -71,3 +71,56 @@ export async function setVisibility(companyId, distributorStockId, visible) {
   });
   return data;
 }
+
+/**
+ * The predefined UOM list - the Items screen's drop-down. Maintained by Greenplus, the same for
+ * every distributor, so one unit cannot end up under several codes. Read-only here.
+ */
+export async function getUoms() {
+  const { data } = await client.get("/api/catalog/uoms");
+  return data || [];
+}
+
+/* ------------------------------------------------------------------ Excel import
+ *
+ * Three steps, as on the Import screen: download the template (or your catalog, to edit and upload
+ * back), preview an upload - which saves nothing - then import the previewed rows. The API checks
+ * the rows again on import.
+ */
+
+/** The .xlsx to fill in, as a Blob. `withItems` puts your current catalog in it. */
+export async function getImportTemplate(withItems = false) {
+  try {
+    const { data } = await client.get("/api/catalog/import/template", { params: { withItems }, responseType: "blob" });
+    return data;
+  } catch (error) {
+    // With responseType blob the API's { error } arrives as a Blob - read it back for describeError.
+    const body = error?.response?.data;
+    if (body instanceof Blob) {
+      try {
+        error.response.data = JSON.parse(await body.text());
+      } catch {
+        // Not JSON - describeError falls back to its own message.
+      }
+    }
+    throw error;
+  }
+}
+
+/**
+ * What importing this file would do, row by row: { rows: [{ row, action, errors, changes }], add,
+ * update, unchanged, skip, errors }. Nothing is saved.
+ */
+export async function previewImport(file, updateExisting) {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("updateExisting", updateExisting ? "true" : "false");
+  const { data } = await client.post("/api/catalog/import/preview", form);
+  return data;
+}
+
+/** Imports previewed rows (the `row` of each). Rows with errors are skipped; the rest save together. */
+export async function importItems(rows, updateExisting, fileName) {
+  const { data } = await client.post("/api/catalog/import", { rows, updateExisting, fileName });
+  return data;
+}

@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TextBox from "devextreme-react/text-box";
+import PasswordBox from "../../components/PasswordBox";
 import Button from "devextreme-react/button";
 import LoadIndicator from "devextreme-react/load-indicator";
 import { useAuth } from "../../contexts/auth";
@@ -8,7 +9,7 @@ import { describeError } from "../../api/baseapi";
 import "./login.css";
 
 export default function LoginPage() {
-  const { signIn } = useAuth();
+  const { signIn, notice } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -25,8 +26,14 @@ export default function LoginPage() {
       setBusy(true);
 
       try {
-        await signIn(username.trim(), password);
-        navigate("/catalog", { replace: true });
+        const result = await signIn(username.trim(), password);
+        if (!result) {
+          // Signed in on another device and the user chose not to end that session.
+          setError("Login cancelled - the other session is still signed in.");
+          return;
+        }
+        // The dashboard - /catalog is an old address that now lands on Stock & Visibility.
+        navigate("/home", { replace: true });
       } catch (err) {
         const described = describeError(err, "Could not sign in.");
 
@@ -46,10 +53,13 @@ export default function LoginPage() {
   );
 
   return (
+    // Laid out like the accounting login: logo top left, the soft green wave behind, one card.
     <div className="login-page">
+      <img className="login-logo" src="/images/greenplus-logo.png" alt="Greenplus" />
       <form className="login-card" onSubmit={submit}>
-        <h1 className="login-title">Greenplus Distributor</h1>
-        <p className="login-subtitle">Sign in to manage your catalog</p>
+        <span className="login-product">Distributor</span>
+        <h1 className="login-title">Login</h1>
+        <p className="login-subtitle">Sign in to manage your catalog and see how your items are selling.</p>
 
         {/* valueChangeEvent="input" because DevExtreme TextBox otherwise commits its value on
             blur/Enter only: the Sign in button stays disabled while you type, so the first click
@@ -70,9 +80,8 @@ export default function LoginPage() {
         <label className="login-label" htmlFor="password">
           Password
         </label>
-        <TextBox
+        <PasswordBox
           inputAttr={{ id: "password", autoComplete: "current-password" }}
-          mode="password"
           value={password}
           onValueChanged={(e) => setPassword(e.value)}
           valueChangeEvent="input"
@@ -80,6 +89,17 @@ export default function LoginPage() {
           disabled={busy}
           stylingMode="outlined"
         />
+        <Link className="login-link login-forgot" to="/forgot-password">
+          Forgot password?
+        </Link>
+
+        {/* Why this browser was signed out (another device signed in, or the session ended) -
+            until the user tries again, when the attempt's own result takes over. */}
+        {notice && !error && (
+          <div className="login-notice" role="status">
+            {notice}
+          </div>
+        )}
 
         {error && (
           <div className="login-error" role="alert">
@@ -102,7 +122,7 @@ export default function LoginPage() {
           disabled={busy || !username.trim() || !password}
           className="login-button"
           render={() =>
-            busy ? <LoadIndicator height={20} width={20} /> : <span>Sign in</span>
+            busy ? <LoadIndicator height={20} width={20} /> : <span className="login-button-text">Login</span>
           }
         />
       </form>

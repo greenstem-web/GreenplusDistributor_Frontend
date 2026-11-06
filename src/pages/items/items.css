@@ -1,82 +1,299 @@
 .items-page {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+}
+
+/* One card holds the search, the grid and the count, and fills what is left of the window. */
+.items-card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e6e8eb;
+  border-radius: 14px;
+  background: var(--gp-surface);
+  overflow: hidden;
 }
 
 .items-toolbar {
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 16px;
   flex-wrap: wrap;
+  padding: 22px 24px 20px;
 }
 
 .items-filter {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .items-filter-label {
-  font-size: 13px;
-  color: var(--gp-muted);
+  font-size: 13.5px;
+  color: #26292c;
+  cursor: pointer;
+  user-select: none;
 }
 
+.items-grid {
+  flex: 1;
+  min-height: 0;
+}
+
+/* The grid: a light header band, tall rows, no stripes, no lines between cells. */
+.items-datagrid.dx-datagrid,
+.items-datagrid .dx-datagrid {
+  background: transparent;
+}
+
+.items-datagrid .dx-datagrid-headers {
+  background: #f6f6f7;
+  border-top: 1px solid #ececee;
+  border-bottom: 1px solid #ececee;
+}
+
+.items-datagrid .dx-datagrid-headers .dx-header-row > td {
+  padding: 15px 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #3a3f45;
+}
+
+.items-datagrid .dx-datagrid-headers .dx-header-row > td:first-child,
+.items-datagrid .dx-data-row > td:first-child {
+  padding-left: 24px;
+}
+
+/* Centred in the row: the action buttons are the tallest thing in it, and DevExtreme's own rule
+   would sit every plain-text cell at the top, above the pills and dots beside it. */
+.items-datagrid .dx-datagrid-rowsview .dx-row.dx-data-row > td {
+  padding: 17px 10px;
+  font-size: 13.5px;
+  line-height: 20px;
+  color: #26292c;
+  vertical-align: middle;
+  border: 0;
+}
+
+.items-datagrid .dx-datagrid-rowsview .dx-row.dx-data-row.dx-state-hover:not(.dx-selection) > td {
+  background-color: #f7faf8;
+}
+
+.items-code {
+  color: inherit;
+}
+
+/* What the search matched: the brand's green wash, not the theme's teal. */
+.items-datagrid .dx-datagrid-search-text {
+  background-color: #cdf0d6;
+  color: inherit;
+}
+
+/* The row's two actions: a green pencil to edit, a red bin to withdraw. */
 .items-actions {
   display: flex;
-  gap: 2px;
+  align-items: center;
+  gap: 4px;
+}
+
+.items-action {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.items-action-edit {
+  color: #2fb551;
+}
+
+.items-action-remove {
+  color: #e0463c;
+}
+
+.items-action-edit:hover {
+  background: #eaf8ee;
+}
+
+.items-action-remove:hover {
+  background: #fdeceb;
+}
+
+.items-action:focus-visible {
+  outline: 2px solid rgba(70, 207, 100, 0.5);
 }
 
 /* Yes/No rather than a tick and a blank: a blank cell reads as "not set", and for two booleans
-   that decide who can see an item, "not set" is the one answer neither of them means. */
-.items-flag-on {
-  font-size: 12px;
-  font-weight: 600;
-  color: #1b7f3b;
+   that decide who can see an item, "not set" is the one answer neither of them means. The dot says
+   it at a glance, the word says it without colour. */
+.items-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
-.items-flag-off {
+.items-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.items-flag-on .items-dot {
+  background: #3cc35a;
+}
+
+.items-flag-off .items-dot {
+  background: #9aa0a6;
+}
+
+/* Warning quantity: a small amber pill. */
+.items-warn {
+  display: inline-block;
+  min-width: 22px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #fff1cc;
+  color: #b7740a;
   font-size: 12px;
-  color: var(--gp-muted);
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.items-none {
+  color: #b0b4b9;
+}
+
+/* Under the grid: how many rows are showing, and what the toggle hides. */
+.items-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 16px;
+  padding: 14px 24px 16px;
+  border-top: 1px solid #ececee;
+  font-size: 12.5px;
+  color: #6b7178;
+}
+
+@media (max-width: 900px) {
+  .items-toolbar,
+  .items-foot {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .items-datagrid .dx-datagrid-headers .dx-header-row > td:first-child,
+  .items-datagrid .dx-data-row > td:first-child {
+    padding-left: 16px;
+  }
 }
 
 /* ------------------------------------------------------------------------------- the form */
 
+/* Both item popups (the form and the import): a green title over a hairline, roomy padding. */
+.items-popup .dx-popup-title.dx-toolbar {
+  padding: 18px 32px 16px;
+  border-bottom: 1px solid #eceef0;
+}
+
+.items-popup .dx-popup-title .dx-toolbar-label {
+  font-size: 20px;
+  font-weight: 600;
+  color: #3cc35a;
+}
+
+.items-popup .dx-popup-title .dx-closebutton .dx-icon {
+  color: #3a3f45;
+}
+
+/* The popup scrolls its own content area once the form is taller than maxHeight (90vh). */
+.items-popup .dx-popup-content {
+  overflow-y: auto;
+  padding: 0 32px;
+}
+
 .items-form {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 4px 2px 8px;
+  gap: 8px;
+  padding-top: 20px;
 }
 
 .items-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--gp-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  margin-top: 10px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #26292c;
+  margin-top: 14px;
+}
+
+.items-form > .items-label:first-of-type,
+.items-form > .items-form-error + .items-label {
+  margin-top: 0;
 }
 
 .items-hint {
-  font-size: 11px;
-  color: var(--gp-muted);
-  line-height: 1.4;
-  margin-top: 4px;
+  font-size: 12.5px;
+  color: #5f6368;
+  line-height: 1.55;
+  margin-top: 2px;
+}
+
+/* Taller inputs with a light border, as in the rest of the restyled pages. */
+.items-form .dx-texteditor.dx-editor-outlined {
+  border-color: #e3e5e8;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.items-form .dx-texteditor.dx-editor-outlined.dx-state-hover {
+  border-color: #c9cdd2;
+}
+
+.items-form .dx-texteditor.dx-editor-outlined.dx-state-focused {
+  border-color: var(--gp-green);
+}
+
+/* A field with a problem keeps its red outline (index.css) over the light border above. */
+.items-form .dx-invalid.dx-texteditor.dx-editor-outlined {
+  border-color: var(--gp-danger);
+}
+
+.items-form .dx-texteditor-input {
+  min-height: 46px;
+  padding: 0 16px;
+  font-size: 14.5px;
+}
+
+.items-form .dx-textarea .dx-texteditor-input {
+  padding: 12px 16px;
+}
+
+.items-form .dx-placeholder::before {
+  padding: 13px 16px;
+  font-size: 14.5px;
 }
 
 /* The server's refusal, shown where the fields are rather than as a toast: a duplicate code is
    fixed by editing the field two lines below it, and a notification that floats away takes the
    reason with it. */
 .items-form-error {
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 1px solid #f5c2c7;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #fdf2f2;
   color: var(--gp-danger);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -90,24 +307,70 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
+/* A switch with its label and what it does beside it. */
 .items-toggle {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.items-toggle + .items-toggle {
+  margin-top: 8px;
+}
+
+.items-toggle .dx-switch {
+  flex: none;
 }
 
 .items-toggle-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--gp-text);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #26292c;
+  line-height: 24px;
 }
 
+/* Cancel and Save, pinned to the foot of the popup across its full width. */
 .items-form-buttons {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 20px;
+  gap: 12px;
+  margin: 18px -32px 0;
+  padding: 16px 32px 18px;
+  border-top: 1px solid #eceef0;
+  background: var(--gp-surface);
+}
+
+@media (max-width: 640px) {
+  .items-popup .dx-popup-title.dx-toolbar {
+    padding: 14px 16px;
+  }
+
+  .items-popup .dx-popup-content {
+    padding: 0 16px;
+  }
+
+  .items-form-buttons {
+    margin: 18px -16px 0;
+    padding: 14px 16px;
+  }
+
+  .items-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+/* Code, name, description and UOM are saved in capitals (the API upper-cases them), so they are
+   shown in capitals while typing too. Display only: the value is converted by the server, which
+   keeps the caret from jumping the way rewriting the value on every keystroke would. */
+.items-upper input,
+.items-upper textarea {
+  text-transform: uppercase;
 }

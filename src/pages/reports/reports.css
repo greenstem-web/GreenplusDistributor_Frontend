@@ -1,0 +1,347 @@
+/* Reports: choices on the left, the rendered PDF on the right. */
+.reports-page {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 430px minmax(0, 1fr);
+  gap: 24px;
+}
+
+/* ------------------------------------------------------------------ side panel */
+
+.reports-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The report list takes the space left over and scrolls inside it ... */
+.reports-section-list {
+  flex: 1 1 auto;
+  min-height: 140px;
+}
+
+.reports-section-list .reports-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px 4px 2px 0;
+}
+
+/* ... while the period, options and download buttons keep their place at the bottom. */
+.reports-params {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid #eceef0;
+}
+
+.reports-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* A section's heading: its icon on a tinted tile (tones in index.css), then the words. */
+.reports-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding-left: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #26292c;
+  line-height: 1.2;
+}
+
+.reports-heading-icon {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--tile-wash);
+  color: var(--tile-ink);
+}
+
+.reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reports-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid #e6e8eb;
+  border-radius: 12px;
+  background: var(--gp-surface);
+  color: var(--gp-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.reports-item:hover {
+  border-color: #c3cad2;
+}
+
+.reports-item-on,
+.reports-item-on:hover {
+  border-color: #3cc35a;
+  background: #effaf2;
+  box-shadow: 0 0 0 1px #3cc35a inset;
+}
+
+.reports-item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #26292c;
+}
+
+.reports-item-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: #6b7178;
+}
+
+.reports-periods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.reports-period {
+  padding: 7px 14px;
+  border: 1px solid #e3e5e8;
+  border-radius: 999px;
+  background: var(--gp-surface);
+  color: #6b7178;
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.reports-period:hover {
+  color: var(--gp-text);
+}
+
+.reports-period-on,
+.reports-period-on:hover {
+  border-color: #3cc35a;
+  background: #3cc35a;
+  color: #fff;
+  font-weight: 600;
+}
+
+.reports-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 8px;
+}
+
+.reports-date {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7178;
+}
+
+.reports-date .dx-texteditor.dx-editor-outlined {
+  border-color: #e3e5e8;
+  border-radius: 8px;
+}
+
+.reports-date .dx-texteditor-input {
+  min-height: 42px;
+  padding-left: 12px;
+  font-size: 15px;
+}
+
+.reports-invalid {
+  font-size: 12px;
+  color: var(--gp-danger);
+}
+
+.reports-actions {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 8px;
+}
+
+.reports-actions .page-btn {
+  height: 44px;
+  padding: 0 18px;
+  font-size: 15px;
+}
+
+.reports-note {
+  margin: 0;
+  padding: 0 8px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--gp-muted);
+}
+
+/* ------------------------------------------------------------------ preview */
+
+.reports-preview {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid #e3e5e8;
+  border-radius: 12px;
+  background: var(--gp-surface);
+  overflow: hidden;
+}
+
+.reports-preview-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e3e5e8;
+  background: #f4f5f6;
+}
+
+.reports-preview-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #3a3f45;
+}
+
+.reports-preview-body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  background: #525659; /* the browser PDF viewer's own grey, so there is no flash of white */
+}
+
+/* Covers the preview while a report is being prepared. */
+.reports-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(82, 86, 89, 0.85);
+  color: #fff;
+  font-size: 14px;
+}
+
+.reports-loading-text {
+  font-weight: 600;
+}
+
+.reports-frame {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.reports-message {
+  margin: auto;
+  padding: 24px;
+  color: #e6e8ea;
+  font-size: 14px;
+  text-align: center;
+}
+
+.reports-message-error {
+  max-width: 480px;
+  border-radius: 8px;
+  background: #fdf2f2;
+  color: var(--gp-danger);
+}
+
+/* A laptop beside an open menu: a narrower panel. */
+@media (max-width: 1280px) {
+  .reports-page {
+    grid-template-columns: 340px minmax(0, 1fr);
+  }
+}
+
+/* Narrow screens: stack the panel above the preview. */
+@media (max-width: 900px) {
+  .reports-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(480px, 1fr);
+  }
+
+  /* Stacked above the preview, the panel has no fixed height to fill - cap the list instead. */
+  .reports-side {
+    overflow: visible;
+  }
+
+  .reports-section-list .reports-list {
+    max-height: 260px;
+  }
+}
+
+/* ------------------------------------------------------------------ report options */
+
+.reports-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reports-option {
+  padding: 0 8px;
+}
+
+.reports-option-label {
+  font-size: 13px;
+  color: #6b7178;
+}
+
+.reports-segmented {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 2px;
+  border: 1px solid var(--gp-border);
+  border-radius: 8px;
+  background: var(--gp-bg);
+}
+
+.reports-segment {
+  padding: 5px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--gp-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.reports-segment:hover {
+  color: var(--gp-text);
+}
+
+.reports-segment-on,
+.reports-segment-on:hover {
+  background: #3cc35a;
+  color: #fff;
+  font-weight: 600;
+}

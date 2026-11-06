@@ -1,0 +1,471 @@
+/* Stock & Visibility (CompanyItemsPage) - the former Visibility and Stock pages in one. The card,
+   toolbar and view tabs are shared with the Audit Log; the badges and quantity with the drill-down
+   pages (detail/cells.js). */
+
+.ci-page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ------------------------------------------------------------------ company + summary */
+
+.ci-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+}
+
+.ci-field {
+  /* Up to the mockup width, giving way so the tiles stay on the same row. */
+  flex: 1 1 320px;
+  max-width: 740px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ci-label {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #26292c;
+}
+
+.ci-field .dx-texteditor.dx-editor-outlined {
+  border-color: #e3e5e8;
+  border-radius: 8px;
+}
+
+.ci-field .dx-texteditor-input {
+  min-height: 36px;
+  padding-left: 14px;
+  font-size: 14.5px;
+}
+
+.ci-field .dx-placeholder::before {
+  padding-left: 14px;
+  font-size: 14.5px;
+}
+
+.ci-stat-date {
+  min-width: 140px;
+}
+
+.ci-warning {
+  padding: 10px 14px;
+  border: 1px solid var(--gp-warning-border);
+  border-radius: 10px;
+  background: var(--gp-warning-bg);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* ------------------------------------------------------------------ grid card */
+
+.ci-card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e6e8eb;
+  border-radius: 14px;
+  background: var(--gp-surface);
+  overflow: hidden;
+}
+
+.ci-grid-wrap {
+  flex: 1;
+  min-height: 0;
+}
+
+.ci-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 22px 20px 22px 22px;
+}
+
+.ci-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ci-search {
+  flex: 0 1 290px;
+  width: 290px;
+  min-width: 200px;
+}
+
+/* The view tabs: a grey track, the current one a white pill. */
+.ci-views {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 10px;
+  background: #f3f4f5;
+}
+
+.ci-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #3a3f45;
+  font: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ci-view:hover {
+  color: #26292c;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.ci-view-on,
+.ci-view-on:hover {
+  background: var(--gp-surface);
+  color: #26292c;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1);
+}
+
+.ci-view-count {
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: #e4e6e9;
+  color: #5f6368;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.ci-view-on .ci-view-count {
+  background: var(--gp-green-wash-2);
+  color: var(--gp-green-ink);
+}
+
+/* The grid: a light header band, tall rows, no lines. Shared with the Audit Log. */
+.ci-grid .dx-datagrid-headers {
+  background: #f6f6f7;
+  border-top: 1px solid #ececee;
+  border-bottom: 1px solid #ececee;
+}
+
+.ci-grid .dx-datagrid-headers .dx-header-row > td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #3a3f45;
+}
+
+.ci-grid .dx-datagrid-rowsview .dx-row.dx-data-row > td {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  vertical-align: middle;
+}
+
+/* Roomy rows (Stock & Visibility, Audit Log): taller, no lines. */
+.ci-grid-roomy .dx-datagrid-rowsview .dx-row.dx-data-row > td {
+  padding-top: 22px;
+  padding-bottom: 22px;
+  font-size: 13.5px;
+  line-height: 20px;
+  color: #26292c;
+  border: 0;
+}
+
+.ci-grid-roomy .dx-datagrid-rowsview .dx-row.dx-data-row.dx-state-hover:not(.dx-selection) > td {
+  background-color: #f7faf8;
+}
+
+/* One company per band: green, the name in bold, a chevron on the right to fold it. The grid's own
+   expand arrow is hidden - the whole band is the button (expandMode rowClick). */
+.ci-grid-roomy .dx-datagrid-rowsview .dx-row.dx-group-row > td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background: #eef9f1;
+  border: 0;
+  color: #26292c;
+  cursor: pointer;
+}
+
+.ci-grid-roomy .dx-group-row .dx-datagrid-group-opened,
+.ci-grid-roomy .dx-group-row .dx-datagrid-group-closed {
+  visibility: hidden;
+}
+
+.ci-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-right: 10px;
+}
+
+.ci-group-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #26292c;
+}
+
+.ci-group-chevron {
+  flex: none;
+  color: #3a3f45;
+  transition: transform 0.15s ease;
+}
+
+.ci-group-chevron.is-collapsed {
+  transform: rotate(-90deg);
+}
+
+.ci-code {
+  font-weight: 400;
+}
+
+.ci-muted {
+  color: var(--gp-muted);
+  font-size: 12px;
+}
+
+.ci-none {
+  color: #b0b4b9;
+}
+
+.ci-read {
+  color: #26292c;
+}
+
+/* ------------------------------------------------------------------ quantity */
+
+.ci-qty {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The number in the stock status's colour; the unit stays in ink. */
+.ci-qty-num {
+  font-weight: 600;
+}
+
+.ci-qty-ok {
+  color: #22a447;
+}
+
+.ci-qty-low {
+  color: #b7740a;
+}
+
+.ci-qty-out,
+.ci-qty-neg {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.ci-uom {
+  color: #26292c;
+}
+
+/* Warning quantity: a small amber pill, as on the Items page. */
+.ci-warn {
+  display: inline-block;
+  min-width: 22px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #fff1cc;
+  color: #b7740a;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ visible toggle */
+
+.vis-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vis-toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: #d5d8dc;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.vis-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease;
+}
+
+.vis-toggle-on {
+  background: var(--gp-green);
+}
+
+.vis-toggle-on .vis-toggle-knob {
+  transform: translateX(16px);
+}
+
+.vis-toggle:focus-visible {
+  outline: 2px solid var(--gp-accent);
+  outline-offset: 2px;
+}
+
+.vis-state {
+  font-size: 12px;
+  color: var(--gp-muted);
+}
+
+.vis-state-on {
+  color: var(--gp-green-text);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ source + stock badges */
+
+/* "Custom" earns colour; "Default" deliberately does not - most rows are defaults. */
+.src-badge {
+  display: inline-block;
+  min-width: 62px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #eff0f2;
+  color: #3a3f45;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.src-badge-custom {
+  background: #e3efff;
+  color: #1f6fe0;
+}
+
+.src-custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* "Reset" beside a custom setting: there on hover or focus, so the column reads like the badge
+   alone until you go to use it. Always there on a touch screen, which has no hover. */
+.src-reset {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--gp-muted);
+  font: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.dx-data-row:hover .src-reset,
+.src-reset:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .src-reset {
+    opacity: 1;
+  }
+}
+
+.src-reset:hover {
+  color: var(--gp-text);
+}
+
+/* Stock status: a dot and the word - green OK, amber Low, red Out. */
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #26292c;
+}
+
+.stock-badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.stock-badge-ok::before {
+  background: #3cc35a;
+}
+
+.stock-badge-low::before {
+  background: #f0a30a;
+}
+
+.stock-badge-out::before {
+  background: #ef4444;
+}
+
+.stock-badge-out {
+  color: #b91c1c;
+}
+
+/* Under the grid: how many rows are showing. */
+.ci-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 16px;
+  padding: 14px 24px 16px;
+  border-top: 1px solid #ececee;
+  font-size: 12.5px;
+  color: #6b7178;
+}
+
+@media (max-width: 900px) {
+  .ci-toolbar,
+  .ci-foot {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .ci-tools {
+    flex: 1 1 100%;
+  }
+
+  .ci-search {
+    flex: 1 1 auto;
+  }
+}

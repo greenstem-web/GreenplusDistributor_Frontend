@@ -1,0 +1,183 @@
+/* Audit log. The page is laid out like Stock & Visibility (ci-page / ci-card / ci-toolbar);
+   only the log's own pieces live here. */
+
+/* "86 entries", with a green dot. */
+.audit-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #26292c;
+}
+
+.audit-count-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gp-green);
+}
+
+/* The user picker and the search, together in one grey bar. */
+.audit-filters {
+  flex: 0 1 600px;
+  width: 600px;
+  min-width: 300px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 10px;
+  background: #f3f4f5;
+}
+
+.audit-filters .audit-user.dx-texteditor.dx-editor-filled {
+  flex: none;
+  border-radius: 8px;
+  background: var(--gp-surface);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+}
+
+.audit-filters .audit-user.dx-editor-filled::after {
+  border-bottom: 0;
+}
+
+.audit-filters .audit-user .dx-texteditor-input {
+  min-height: 32px;
+  padding: 0 0 0 14px;
+  font-size: 13px;
+}
+
+.audit-filters .audit-user .dx-placeholder::before {
+  padding: 7px 0 0 14px;
+  font-size: 13px;
+}
+
+.audit-search {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  color: #6b7178;
+  cursor: text;
+}
+
+.audit-search input {
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--gp-text);
+}
+
+.audit-search input::placeholder {
+  color: #8a8f96;
+}
+
+.audit-filters:focus-within {
+  box-shadow: 0 0 0 1px var(--gp-green) inset;
+}
+
+/* One pill per action, tinted by category; the actions worth a second look stand out. */
+.audit-badge {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #eff0f2;
+  color: #3a3f45;
+}
+
+.audit-badge-catalog {
+  background: #e3f6e8;
+  color: #17703a;
+}
+
+.audit-badge-visibility {
+  background: #e3efff;
+  color: #1f6fe0;
+}
+
+.audit-badge-users {
+  background: #f1ecfa;
+  color: #5e35b1;
+}
+
+.audit-badge-session {
+  background: #eff0f2;
+  color: #3a3f45;
+}
+
+.audit-badge-warn {
+  background: #fff4dc;
+  color: #b7740a;
+}
+
+.audit-badge-bad {
+  background: #fdecec;
+  color: #c62828;
+}
+
+.audit-summary {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  white-space: normal;
+}
+
+.audit-link {
+  font-size: 12px;
+  color: var(--gp-green-text);
+  text-decoration: none;
+}
+
+.audit-link:hover,
+.audit-link:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* The expanded row: what each field was, and what it became. */
+.audit-changes {
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 2px 0 2px 8px;
+}
+
+.audit-changes th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--gp-muted);
+  padding: 4px 16px 4px 0;
+  border-bottom: 1px solid var(--gp-border);
+}
+
+.audit-changes td {
+  padding: 4px 16px 4px 0;
+  vertical-align: top;
+  max-width: 360px;
+  overflow-wrap: anywhere;
+}
+
+.audit-field {
+  font-weight: 600;
+}
+
+.audit-before {
+  color: #9b3434;
+  text-decoration: line-through;
+  text-decoration-color: rgba(155, 52, 52, 0.4);
+}
+
+.audit-after {
+  color: var(--gp-green-text);
+}

@@ -1,13 +1,58 @@
+/* The distributor platform wears the web accounting's clothes: the greenmist DevExtreme theme
+   (index.js) with the same #46cf64 green, #333 text, Helvetica Neue / Segoe UI type, grey grid
+   headers and the white-header + left-menu shell. Someone who uses both should not feel they
+   changed products. */
 :root {
-  --gp-bg: #f4f6f8;
+  --gp-green: #46cf64;
+  --gp-green-hover: #3bbd57;
+  --gp-green-active: #33a94d;
+  /* Text-safe green: #46cf64 is too light for small text on white; this one passes AA. */
+  --gp-green-text: #1e8a3a;
+  --gp-green-wash: #ecfaf0;
+  --gp-green-wash-2: #d7f5df;
+  --gp-orange: #f28c28;
+  --gp-orange-wash: #fff3e6;
+
+  --gp-bg: #f5f6f8;
   --gp-surface: #ffffff;
-  --gp-border: #e2e6ea;
-  --gp-text: #1f2933;
-  --gp-muted: #6b7785;
-  --gp-accent: #03a9f4;
-  --gp-danger: #d32f2f;
+  --gp-border: #e3e5e8;
+  --gp-grid-border: #dddddd;
+  --gp-grid-head: #efefef;
+  --gp-hover: #f2f2f2;
+  --gp-text: #333333;
+  --gp-muted: #7a7f87;
+  --gp-danger: #d9534f;
   --gp-warning-bg: #fff8e1;
   --gp-warning-border: #ffe082;
+  /* Kept for the few rules that still say "accent" - now the brand green. */
+  --gp-accent: var(--gp-green);
+
+  /* Dark green for headings: the brand green is too light for large type on white. */
+  --gp-green-ink: #17703a;
+  --gp-text-2: #5f6368;
+
+  /* Tones - each menu page and dashboard card keeps one: a wash for its tile, an ink for its icon. */
+  --tone-green: #22a447;
+  --tone-green-wash: #e8f7ec;
+  --tone-blue: #2f6fe4;
+  --tone-blue-wash: #eaf1fe;
+  --tone-amber: #e39a0b;
+  --tone-amber-wash: #fff4dc;
+  --tone-purple: #8b4fe0;
+  --tone-purple-wash: #f3edfd;
+  --tone-pink: #e5488f;
+  --tone-pink-wash: #fdecf4;
+  --tone-teal: #0f9f8f;
+  --tone-teal-wash: #e3f6f3;
+  --tone-orange: #ee7a1c;
+  --tone-orange-wash: #fff0e3;
+
+  --gp-header-h: 70px;
+  --gp-side-w: 300px;
+  --gp-side-w-collapsed: 76px;
+  --gp-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --gp-shadow-md: 0 4px 16px rgba(16, 24, 40, 0.08);
+  --gp-font: "Helvetica Neue", "Segoe UI", helvetica, verdana, sans-serif;
 }
 
 html,
@@ -18,10 +63,19 @@ body,
 }
 
 body {
-  background: var(--gp-bg);
+  background: var(--gp-surface);
   color: var(--gp-text);
-  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--gp-font);
+  font-size: 14px;
   -webkit-font-smoothing: antialiased;
+}
+
+/* greenmist's own text colour is a dark teal; the accounting app reads as neutral #333. */
+.dx-widget,
+.dx-widget input,
+.dx-widget textarea {
+  color: var(--gp-text);
+  font-family: var(--gp-font);
 }
 
 .app-booting {
@@ -31,87 +85,947 @@ body {
   justify-content: center;
 }
 
+/* ================================================================== shell */
+
 .app-shell {
-  display: flex;
-  flex-direction: column;
+  position: relative;
   height: 100%;
+  display: grid;
+  grid-template-rows: var(--gp-header-h) minmax(0, 1fr);
+  grid-template-columns: var(--gp-side-w) minmax(0, 1fr);
+  grid-template-areas:
+    "header header"
+    "side main";
+  transition: grid-template-columns 0.18s ease;
 }
+
+.app-shell-collapsed {
+  grid-template-columns: var(--gp-side-w-collapsed) minmax(0, 1fr);
+}
+
+/* ------------------------------------------------------------------ header */
 
 .app-header {
+  grid-area: header;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 20px;
+  gap: 12px;
+  padding: 0 20px 0 10px;
   background: var(--gp-surface);
   border-bottom: 1px solid var(--gp-border);
+  position: relative;
+  z-index: 3;
 }
 
-.app-brand {
+.app-menu-btn {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #555;
+  cursor: pointer;
+}
+
+.app-menu-btn:hover {
+  background: var(--gp-hover);
+}
+
+.app-menu-btn .dx-icon {
+  font-size: 22px;
+  color: #555;
+}
+
+.app-logo {
   display: flex;
-  flex-direction: column;
-  line-height: 1.25;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
   min-width: 0;
 }
 
-.app-brand-name {
-  font-weight: 600;
-  font-size: 15px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* The whole accounting logo, "accounting" script and all. */
+.app-logo-mark {
+  display: block;
+  height: 42px;
+  width: auto;
+  flex: none;
 }
 
-.app-brand-sub {
-  font-size: 12px;
-  color: var(--gp-muted);
-}
-
-/* Between the brand and the user, and allowed to take the slack the header's space-between would
-   otherwise leave in the middle. */
-.app-nav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.app-header-spacer {
   flex: 1;
-}
-
-.app-nav-link {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--gp-muted);
-  text-decoration: none;
-}
-
-.app-nav-link:hover {
-  background: var(--gp-bg);
-  color: var(--gp-text);
-}
-
-/* The current page is marked by weight and an underline as well as colour - on a two-item nav,
-   colour alone is a difference nobody notices until they are lost. */
-.app-nav-link-active {
-  color: var(--gp-text);
-  background: var(--gp-bg);
-  box-shadow: inset 0 -2px 0 var(--gp-accent);
 }
 
 .app-user {
   display: flex;
   align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.app-company {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-  flex-shrink: 0;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gp-text);
+}
+
+.app-company .dx-icon {
+  font-size: 18px;
+  color: #555;
+}
+
+.app-company-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-divider {
+  width: 1px;
+  height: 22px;
+  background: #cfd3d8;
+  flex: none;
+}
+
+.app-avatar {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gp-green);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .app-username {
   font-size: 13px;
   color: var(--gp-muted);
+  white-space: nowrap;
 }
 
+/* Avatar and name open My Profile. */
+.app-profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 8px 3px 3px;
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+.app-profile-link:hover,
+.app-profile-link:focus-visible {
+  background: #eef1f4;
+}
+
+.app-profile-link:hover .app-username {
+  color: var(--gp-text);
+}
+
+.app-logout {
+  padding: 6px 4px;
+  border: 0;
+  background: none;
+  color: #8b8b8b;
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.app-logout:hover {
+  color: var(--gp-text);
+}
+
+/* ------------------------------------------------------------------ side menu */
+
+.app-side {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--gp-surface);
+  border-right: 1px solid var(--gp-border);
+  z-index: 2;
+}
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px 8px;
+}
+
+.app-nav-section {
+  padding: 20px 12px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7d8389;
+  white-space: nowrap;
+}
+
+.app-nav-section:first-child {
+  padding-top: 6px;
+}
+
+.app-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  color: #26292c;
+  font-size: 15px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.12s ease;
+}
+
+.app-nav-link:hover {
+  background: #f4f5f7;
+}
+
+/* Each page's icon on its own tinted tile. */
+.app-nav-icon {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--tile-wash);
+  color: var(--tile-ink);
+}
+
+.app-tone-green { --tile-ink: var(--tone-green); --tile-wash: var(--tone-green-wash); }
+.app-tone-blue { --tile-ink: var(--tone-blue); --tile-wash: var(--tone-blue-wash); }
+.app-tone-amber { --tile-ink: var(--tone-amber); --tile-wash: var(--tone-amber-wash); }
+.app-tone-purple { --tile-ink: var(--tone-purple); --tile-wash: var(--tone-purple-wash); }
+.app-tone-pink { --tile-ink: var(--tone-pink); --tile-wash: var(--tone-pink-wash); }
+.app-tone-teal { --tile-ink: var(--tone-teal); --tile-wash: var(--tone-teal-wash); }
+.app-tone-orange { --tile-ink: var(--tone-orange); --tile-wash: var(--tone-orange-wash); }
+
+/* The current page: a green wash, dark green words, and its tile solid green. */
+.app-nav-link-active,
+.app-nav-link-active:hover {
+  background: var(--gp-green-wash);
+  color: var(--gp-green-ink);
+  font-weight: 600;
+}
+
+.app-nav-link-active .app-nav-icon {
+  background: var(--tone-green);
+  color: #fff;
+}
+
+.app-shell-collapsed .app-nav-section,
+.app-shell-collapsed .app-nav-label {
+  display: none;
+}
+
+.app-shell-collapsed .app-nav {
+  padding: 14px 10px 8px;
+}
+
+.app-shell-collapsed .app-nav-link {
+  justify-content: center;
+  padding: 0;
+}
+
+.app-side-foot {
+  margin: 8px 16px 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--gp-border);
+  font-size: 12px;
+  color: #8a8f96;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.app-shell-collapsed .app-side-foot {
+  display: none;
+}
+
+.app-scrim {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ content */
+
 .app-main {
+  grid-area: main;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 32px 28px;
+  overflow: auto;
+  background: var(--gp-surface);
+}
+
+/* The page title: a small "Section >" trail, then the page itself, large and dark green. */
+.app-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+  flex: none;
+}
+
+.app-path {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.app-path-parent {
+  font-size: 13px;
+  color: var(--gp-text-2);
+}
+
+.app-path-sep {
+  flex: none;
+  margin: 0 8px;
+  color: #9aa0a6;
+}
+
+.app-path-current {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--gp-green-ink);
+}
+
+.app-page-sub {
+  margin-top: 6px;
+  font-size: 14.5px;
+  color: var(--gp-text-2);
+}
+
+/* A filled search box, the icon inside it - above every listing. */
+.gp-search {
+  flex: 0 1 600px;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: #f3f4f5;
+  color: #6b7178;
+  cursor: text;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+}
+
+.gp-search:focus-within {
+  border-color: var(--gp-green);
+  background: var(--gp-surface);
+}
+
+.gp-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--gp-text);
+}
+
+.gp-search input::placeholder {
+  color: #8a8f96;
+}
+
+
+/* Summary tiles (Stock & Visibility, Users): each washed in its tone, a band of it along the top. */
+.gp-stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gp-stat {
+  --stat-tone: #c9cdd2;
+  --stat-wash: #f4f5f6;
+  --stat-edge: #e3e5e8;
+  --stat-ink: #26292c;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 104px;
+  padding: 10px 20px 10px;
+  border: 1px solid var(--stat-edge);
+  border-top: 3px solid var(--stat-tone);
+  border-radius: 10px;
+  background: var(--stat-wash);
+}
+
+.gp-stat-green {
+  --stat-tone: #46cf64;
+  --stat-wash: #effaf2;
+  --stat-edge: #c8eed2;
+  --stat-ink: #145c2b;
+}
+
+.gp-stat-grey {
+  --stat-tone: #a3a8ae;
+  --stat-wash: #f4f5f6;
+  --stat-edge: #e1e3e6;
+  --stat-ink: #26292c;
+}
+
+.gp-stat-yellow {
+  --stat-tone: #f5c518;
+  --stat-wash: #fffbe6;
+  --stat-edge: #f8e7a1;
+  --stat-ink: #7a5300;
+}
+
+.gp-stat-red {
+  --stat-tone: #ef4444;
+  --stat-wash: #fdeeee;
+  --stat-edge: #f7caca;
+  --stat-ink: #8f1d1d;
+}
+
+.gp-stat-blue {
+  --stat-tone: #2f6fe4;
+  --stat-wash: #eef4fe;
+  --stat-edge: #cfdff9;
+  --stat-ink: #1f5fd6;
+}
+
+.gp-stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--stat-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.gp-stat-small {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.gp-stat-label {
+  font-size: 13px;
+  color: #26292c;
+}
+
+/* A status as a coloured dot and its word - never colour alone. */
+.gp-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: #26292c;
+  white-space: nowrap;
+}
+
+.gp-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #9aa0a6;
+}
+
+.gp-status-ok::before {
+  background: #3cc35a;
+}
+
+.gp-status-warn::before {
+  background: #f0a30a;
+}
+
+.gp-status-warn {
+  color: #8a5300;
+}
+
+.gp-status-bad::before {
+  background: #ef4444;
+}
+
+.gp-status-bad {
+  color: #b91c1c;
+}
+
+/* Read by a screen reader, not shown. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Grid pagers in the brand green, not the theme's teal. */
+.dx-datagrid-pager .dx-pages .dx-page.dx-selection,
+.dx-datagrid-pager .dx-page-sizes .dx-selection {
+  background-color: var(--gp-green);
+  color: #fff;
+}
+
+/* A square icon-only button beside a search box (Reload). */
+.gp-icon-btn {
+  width: 34px;
+  height: 34px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e3e5e8;
+  border-radius: 8px;
+  background: var(--gp-surface);
+  color: #5f6368;
+  cursor: pointer;
+}
+
+.gp-icon-btn:hover {
+  background: #f6f7f8;
+  color: #26292c;
+}
+
+.gp-icon-btn:focus-visible {
+  outline: 2px solid rgba(70, 207, 100, 0.5);
+  outline-offset: 2px;
+}
+
+/* A page's own buttons, on the right of its title (AppShell PageActions). */
+.app-page-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  align-self: flex-start;
+}
+
+.app-page-actions:empty {
+  display: none;
+}
+
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid #d9dce0;
+  border-radius: 8px;
+  background: var(--gp-surface);
+  color: #3a3f45;
+  font: inherit;
+  font-size: 14.5px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.page-btn:hover {
+  background: #f6f7f8;
+  border-color: #c9cdd2;
+}
+
+.page-btn:focus-visible {
+  outline: 2px solid rgba(70, 207, 100, 0.5);
+  outline-offset: 2px;
+}
+
+.page-btn-primary,
+.page-btn-primary:hover {
+  border-color: transparent;
+  background: var(--gp-green);
+  color: #fff;
+  font-weight: 600;
+}
+
+.page-btn-primary:hover {
+  background: var(--gp-green-hover);
+}
+
+/* Cancel and other quiet choices: grey, no border. */
+.page-btn-muted,
+.page-btn-muted:hover {
+  border-color: transparent;
+  background: #f1f2f4;
+  color: #26292c;
+  padding: 0 24px;
+}
+
+.page-btn-muted:hover {
+  background: #e7e9ec;
+}
+
+.page-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.app-page-body {
   flex: 1;
   min-height: 0;
-  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* A page that fills the window (Items, Stock, Reports) takes flex: 1 here and sizes its grid to
+   what is left, instead of guessing a calc(100vh - N) that breaks whenever the header changes. */
+
+/* Narrow screens: the menu becomes a drawer over the page, closed until the menu button opens it. */
+@media (max-width: 900px) {
+  .app-shell,
+  .app-shell-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "header"
+      "main";
+  }
+
+  /* Anchored to the shell, not the window, so it starts under the header even when something
+     above the app (the DevExpress licence notice) pushes the page down. */
+  .app-side {
+    position: absolute;
+    top: var(--gp-header-h);
+    bottom: 0;
+    left: 0;
+    width: var(--gp-side-w);
+    transform: translateX(-100%);
+    transition: transform 0.18s ease;
+    box-shadow: var(--gp-shadow-md);
+  }
+
+  .app-shell-drawer-open .app-side {
+    transform: none;
+  }
+
+  .app-shell-drawer-open .app-scrim {
+    display: block;
+    position: absolute;
+    inset: var(--gp-header-h) 0 0 0;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 1;
+  }
+
+  /* In the drawer the labels always show, whatever the desktop collapse state. */
+  .app-shell-collapsed .app-nav-section,
+  .app-shell-collapsed .app-side-foot {
+    display: block;
+  }
+
+  .app-shell-collapsed .app-nav-label {
+    display: inline;
+  }
+
+  .app-shell-collapsed .app-nav {
+    padding: 14px 16px 8px;
+  }
+
+  .app-shell-collapsed .app-nav-link {
+    justify-content: flex-start;
+    padding: 0 12px;
+  }
+
+  .app-logo-mark {
+    height: 34px;
+  }
+
+  /* The page's buttons go under its title rather than squeezing it. */
+  .app-page-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app-page-actions {
+    justify-content: flex-start;
+    align-self: stretch;
+  }
+
+  .app-path-current {
+    font-size: 24px;
+  }
+
+  .app-username,
+  .app-company .dx-icon {
+    display: none;
+  }
+
+  .app-main {
+    padding: 14px 16px 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-company,
+  .app-divider {
+    display: none;
+  }
+}
+
+/* ================================================================== DevExtreme, accounting-style */
+
+/* Primary buttons: the accounting green. */
+.dx-button-mode-contained.dx-button-default {
+  background-color: var(--gp-green);
+  border-color: transparent;
+  color: #fff;
+}
+
+.dx-button-mode-contained.dx-button-default.dx-state-hover,
+.dx-button-mode-contained.dx-button-default.dx-state-focused {
+  background-color: var(--gp-green-hover);
+}
+
+.dx-button-mode-contained.dx-button-default.dx-state-active {
+  background-color: var(--gp-green-active);
+}
+
+.dx-button-mode-contained.dx-button-default.dx-state-disabled {
+  background-color: #a5e6b3;
+}
+
+.dx-button-mode-contained.dx-button-default .dx-icon {
+  color: #fff;
+}
+
+.dx-button-mode-outlined.dx-button-default {
+  border-color: var(--gp-green);
+  color: var(--gp-green-text);
+}
+
+.dx-button-mode-text.dx-button-default {
+  color: var(--gp-green-text);
+}
+
+.dx-button {
+  border-radius: 4px;
+}
+
+/* Inputs: green focus ring instead of greenmist's teal. */
+.dx-texteditor.dx-editor-outlined.dx-state-focused,
+.dx-texteditor.dx-editor-outlined.dx-state-active {
+  border-color: var(--gp-green);
+}
+
+/* Switches: a round grey track with a white knob, green when on - not greenmist's square teal handle. */
+.dx-switch .dx-switch-container {
+  border-color: transparent;
+  border-radius: 999px;
+  background-color: #d5d8dc;
+  transition: background-color 0.15s ease;
+}
+
+/* No ON / OFF words on the track - the knob and the colour say it, and the label beside it names it. */
+.dx-switch .dx-switch-on,
+.dx-switch .dx-switch-off {
+  color: transparent;
+}
+
+.dx-switch.dx-state-hover .dx-switch-container {
+  background-color: #c8ccd1;
+}
+
+.dx-switch .dx-switch-handle::before {
+  width: 18px;
+  height: 18px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.25);
+}
+
+.dx-switch-on-value .dx-switch-container,
+.dx-switch-on-value.dx-state-hover .dx-switch-container {
+  background-color: var(--gp-green);
+}
+
+.dx-switch-on-value .dx-switch-handle::before {
+  background-color: #fff;
+}
+
+.dx-switch-on-value .dx-switch-container::before {
+  background-color: transparent;
+}
+
+.dx-switch.dx-state-focused .dx-switch-container {
+  box-shadow: 0 0 0 3px rgba(70, 207, 100, 0.25);
+}
+
+.dx-checkbox-checked .dx-checkbox-icon {
+  color: var(--gp-green);
+}
+
+.dx-list-item.dx-state-focused,
+.dx-list-item.dx-list-item-selected {
+  background-color: var(--gp-green-wash);
+  color: var(--gp-text);
+}
+
+.dx-list-item.dx-state-focused.dx-list-item-selected {
+  background-color: var(--gp-green-wash-2);
+}
+
+.dx-popup-title.dx-toolbar {
+  border-bottom-color: var(--gp-border);
+}
+
+.dx-popup-title .dx-toolbar-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gp-green);
+}
+
+/* Grids: the accounting listing - grey header row, light borders. */
+.dx-datagrid-headers {
+  background-color: var(--gp-grid-head);
+  color: #000;
+}
+
+.dx-datagrid-headers .dx-header-row > td {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: 400;
+  color: #000;
+}
+
+.dx-datagrid-borders > .dx-datagrid-headers,
+.dx-datagrid-borders > .dx-datagrid-rowsview,
+.dx-datagrid-borders > .dx-datagrid-total-footer {
+  border-color: var(--gp-grid-border);
+}
+
+.dx-datagrid .dx-row > td {
+  border-color: #ebebeb;
+}
+
+.dx-datagrid-rowsview .dx-row.dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted) > td {
+  background-color: #f6fbf7;
+  color: var(--gp-text);
+}
+
+.dx-datagrid-table .dx-data-row.dx-row-alt > td {
+  background-color: #fafafa;
+}
+
+.dx-datagrid .dx-header-filter:not(.dx-header-filter-empty),
+.dx-datagrid .dx-sort-up,
+.dx-datagrid .dx-sort-down {
+  color: var(--gp-green-text);
+}
+
+/* Toasts: the accounting green for success. */
+.dx-toast-success {
+  background-color: var(--gp-green);
+}
+
+/* Shared card: white, hairline border, a whisper of shadow - used across the pages. */
+.gp-card {
+  background: var(--gp-surface);
+  border: 1px solid var(--gp-border);
+  border-radius: 10px;
+  box-shadow: var(--gp-shadow-sm);
+}
+
+/* A company name or item code that opens its drill-down page. Text ink until hovered or focused,
+   so a table full of them still reads as a table - the underline on hover says it can be opened. */
+.entity-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.entity-link:hover,
+.entity-link:focus-visible {
+  color: var(--gp-green-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* The parent page in a drill-down heading ("Stock & Visibility" in Catalog >> Stock & Visibility >> X). */
+.app-path-link {
+  text-decoration: none;
+}
+
+.app-path-link:hover,
+.app-path-link:focus-visible {
+  color: var(--gp-green-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ field errors (FieldError)
+   A form field's own message, right under it, and the input outlined to match (isValid=false).
+   Global, so every form - Items, Users, My Profile, the set-password page - looks the same. */
+.items-field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--gp-danger);
+}
+
+.items-field-error .dx-icon {
+  flex: none;
+  font-size: 13px;
+  margin-top: 1px;
+  color: var(--gp-danger);
+}
+
+.dx-invalid.dx-texteditor.dx-editor-outlined,
+.dx-invalid.dx-texteditor {
+  border-color: var(--gp-danger);
+}
+
+.dx-invalid.dx-texteditor.dx-state-focused {
+  box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.15);
+}
+
+/* DevExtreme's own red corner badge says nothing the message below does not. */
+.dx-invalid .dx-texteditor-input-container::after,
+.dx-invalid.dx-texteditor .dx-invalid-message {
+  display: none;
+}
+
+.items-required {
+  color: var(--gp-danger);
+  font-weight: 600;
+}
+
+/* The eye on every password field (PasswordBox) - as in the web accounting: DevExtreme's standard
+   button with the accounting's eye images, border off (default.scss there does the same). */
+.password-eye.dx-button.dx-button-mode-contained {
+  border-style: none;
 }

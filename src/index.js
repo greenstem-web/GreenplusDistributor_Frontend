@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "devextreme/dist/css/dx.light.css";
+// greenmist: the base theme the web accounting is built on (its themes/metadata.base.json).
+import "devextreme/dist/css/dx.greenmist.css";
 import "./index.css";
 import App from "./App";
 

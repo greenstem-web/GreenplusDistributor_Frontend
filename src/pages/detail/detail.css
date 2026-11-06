@@ -1,0 +1,72 @@
+/* Company and item drill-downs. They are the dashboard's layout (.home: KPI tiles, cards, trend)
+   with a table card underneath, so only what is new lives here. */
+
+.detail .home-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* "Change visibility" / "Edit on Items": where the change is made, since these pages only read. */
+.detail-action {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gp-green-text);
+  text-decoration: none;
+}
+
+.detail-action:hover,
+.detail-action:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* The item's own facts, as a wrapping grid of label-over-value pairs. */
+.detail-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px 24px;
+}
+
+.detail-fact {
+  min-width: 0;
+}
+
+.detail-fact-wide {
+  grid-column: span 2;
+}
+
+.detail-fact-label {
+  font-size: 12px;
+  color: var(--viz-muted);
+  margin-bottom: 3px;
+}
+
+.detail-fact-value {
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.detail-fact-on {
+  color: var(--gp-green-text);
+}
+
+.detail-fact-off {
+  color: #9a6400;
+}
+
+/* The table card's grid sits flush in the card, under its title. */
+.detail-grid {
+  margin-top: 4px;
+}
+
+.detail-grid .dx-datagrid-headers {
+  background: #efefef;
+}
+
+@media (max-width: 520px) {
+  .detail-fact-wide {
+    grid-column: auto;
+  }
+}

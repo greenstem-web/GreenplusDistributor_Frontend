@@ -8,4 +8,4 @@
 // Left as a placeholder rather than copied in: a licence key is not mine to duplicate into a new
 // repository that is headed for its own GitHub remote. Decide whether it belongs in the repo or in
 // an env var before you paste it.
-export const licenseKey = "";
+export const licenseKey = "ewogICJmb3JtYXQiOiAxLAogICJjdXN0b21lcklkIjogIjQyMjNlMWUzLTJjNmQtNDNhMy05NDAyLTY3MmEwMTFkOWI2ZCIsCiAgIm1heFZlcnNpb25BbGxvd2VkIjogMjQyCn0=.tggRmqMBEIf2Ib6ztZcpf90+BXsSVKHjmknxGwd0ObjpLizhq7qAxMCtf8d5XuvSWyj44utsRFAymT017ZxgJsWrUEd5R1ZWLEbGYTo3DRGfzS13sHnwEtWBMXGS/+beevBcaQ==";

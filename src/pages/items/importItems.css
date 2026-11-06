@@ -1,0 +1,547 @@
+/* The popup fills its height: steps on top, the content takes what is left, the footer at the foot. */
+.import-popup .dx-popup-content {
+  display: flex;
+  flex-direction: column;
+  background: var(--gp-surface);
+}
+
+.import-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 18px;
+}
+
+/* ------------------------------------------------------------------------------ stepper */
+
+.import-stepper {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f4f5f6;
+  list-style: none;
+}
+
+.import-stepper-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gp-muted);
+}
+
+/* Every step but the last stretches, and draws the line to the next one. */
+.import-stepper-item:not(:last-child) {
+  flex: 1;
+}
+
+.import-stepper-item:not(:last-child)::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  margin: 0 12px;
+  border-radius: 2px;
+  background: var(--gp-border);
+}
+
+.import-stepper-item.is-done:not(:last-child)::after {
+  background: var(--gp-green);
+}
+
+.import-stepper-dot {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--gp-border);
+  background: var(--gp-surface);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gp-muted);
+}
+
+.import-stepper-dot svg {
+  color: #fff;
+}
+
+.import-stepper-item.is-current .import-stepper-dot {
+  border-color: var(--gp-green);
+  color: var(--gp-green-text);
+}
+
+.import-stepper-item.is-current .import-stepper-label {
+  color: var(--gp-text);
+  font-weight: 600;
+}
+
+.import-stepper-item.is-done .import-stepper-dot {
+  border-color: var(--gp-green);
+  background: var(--gp-green);
+}
+
+.import-stepper-label {
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------- before a sheet is read */
+
+.import-start {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.import-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #e6e8eb;
+  border-radius: 14px;
+  background: var(--gp-surface);
+}
+
+.import-card-get {
+  border-color: #cdeed6;
+  background: #effaf2;
+}
+
+.import-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  color: #26292c;
+}
+
+.import-card-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #3cc35a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.import-downloads {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.import-download {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #e3e5e8;
+  border-radius: 12px;
+  background: var(--gp-surface);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.import-download:hover,
+.import-download:focus-visible {
+  border-color: var(--gp-green);
+  background: #fbfefc;
+  box-shadow: 0 0 0 3px var(--gp-green-wash);
+  outline: none;
+}
+
+.import-download-icon {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.import-download-icon-green {
+  background: var(--tone-green-wash);
+  color: var(--gp-green-ink);
+}
+
+.import-download-icon-blue {
+  background: var(--tone-blue-wash);
+  color: var(--tone-blue);
+}
+
+.import-download-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.import-download-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #26292c;
+}
+
+.import-download-sub {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #5f6368;
+}
+
+.import-download-go {
+  flex: none;
+  color: var(--gp-green-text);
+}
+
+.import-rules {
+  margin: 0;
+  padding: 0 4px 0 22px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #3a3f45;
+}
+
+.import-rules b {
+  font-weight: 500;
+  color: #26292c;
+}
+
+/* The drop zone: the obvious thing to do next, so it gets the space. */
+.import-drop {
+  flex: 1;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 24px;
+  border: 1.5px dashed #d5d8dc;
+  border-radius: 14px;
+  background: #fafafa;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.import-drop:hover,
+.import-drop:focus-visible,
+.import-drop.is-dragging {
+  border-color: var(--gp-green);
+  background: var(--gp-green-wash);
+  outline: none;
+}
+
+.import-drop-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #3cc35a;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(60, 195, 90, 0.3);
+}
+
+.import-drop-title {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #26292c;
+}
+
+.import-drop-or {
+  font-size: 14.5px;
+  color: #26292c;
+}
+
+.import-drop-link {
+  color: var(--gp-green-text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.import-drop-note {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: #8a8f96;
+}
+
+.import-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.import-toggle > span:not(.import-toggle-title) {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.import-toggle-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #26292c;
+}
+
+.import-toggle-sub {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #5f6368;
+}
+
+/* "Update items already in my catalog", in a grey panel under the drop zone. */
+.import-toggle-panel {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f4f5f6;
+}
+
+.import-toggle .dx-switch {
+  flex: none;
+}
+
+.import-toggle-inline {
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------- after a sheet is read */
+
+.import-filebar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--gp-border);
+  border-radius: 10px;
+  background: var(--gp-surface);
+}
+
+.import-filebar .import-filebar-icon {
+  flex: none;
+  color: var(--gp-green-text);
+  font-size: 26px;
+}
+
+.import-filebar-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.import-filebar-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gp-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.import-filebar-sub {
+  font-size: 12px;
+  color: var(--gp-muted);
+}
+
+/* Each tone is used by the tiles and the grid badges alike. */
+.import-tone-add {
+  --tone: var(--gp-green-text);
+  --tone-wash: var(--gp-green-wash);
+}
+
+.import-tone-update {
+  --tone: #0277bd;
+  --tone-wash: #e3f2fd;
+}
+
+.import-tone-same {
+  --tone: #5f6670;
+  --tone-wash: #f0f1f3;
+}
+
+.import-tone-error {
+  --tone: var(--gp-danger);
+  --tone-wash: #fdecec;
+}
+
+/* The tiles are the summary AND the filter: click one to see only those rows, again for all. */
+.import-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.import-tile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid var(--gp-border);
+  border-radius: 10px;
+  background: var(--gp-surface);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.import-tile:hover {
+  border-color: var(--tone);
+}
+
+.import-tile.is-on {
+  border-color: var(--tone);
+  box-shadow: 0 0 0 3px var(--tone-wash);
+}
+
+.import-tile.is-zero:not(.is-on) {
+  opacity: 0.55;
+}
+
+.import-tile .import-tile-icon {
+  grid-row: span 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--tone-wash);
+  color: var(--tone);
+  font-size: 18px;
+}
+
+.import-tile-value {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--gp-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.import-tile-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tone);
+}
+
+.import-tile-sub {
+  font-size: 12px;
+  color: var(--gp-muted);
+}
+
+.import-grid {
+  flex: 1;
+  min-height: 160px;
+}
+
+.import-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--tone-wash);
+  color: var(--tone);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.import-lines {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--gp-text);
+}
+
+.import-lines-error {
+  color: var(--gp-danger);
+}
+
+/* ------------------------------------------------------------------------- shared */
+
+.import-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid #f5c2c7;
+  border-radius: 10px;
+  background: #fdf2f2;
+  color: var(--gp-danger);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.import-error svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+/* Full popup width under a hairline: the foot of a tall popup, right under the cards in a short one. */
+.import-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: auto -32px 0;
+  padding: 16px 32px 18px;
+  border-top: 1px solid #eceef0;
+}
+
+@media (max-width: 640px) {
+  .import-footer {
+    margin: auto -16px 0;
+    padding: 14px 16px;
+    flex-wrap: wrap;
+  }
+}
+
+.import-summary {
+  margin-right: auto;
+  font-size: 13px;
+  color: var(--gp-muted);
+}
+
+.import-summary b {
+  color: var(--gp-text);
+}
+
+.import-summary-error {
+  color: var(--gp-danger);
+}
+
+@media (max-width: 760px) {
+  .import-start {
+    grid-template-columns: 1fr;
+  }
+
+  .import-stepper-label {
+    display: none;
+  }
+
+  .import-filebar {
+    flex-wrap: wrap;
+  }
+}
